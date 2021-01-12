@@ -38,9 +38,9 @@ jobs:
                   name: ui-assets
                   path: ./ui/build.zip
 
-    backend-windows:
-        name: "Build Windows Backend"
-        runs-on: "windows-latest"
+    backend:
+        name: "Build Backend"
+        runs-on: "ubuntu-latest"
         steps:
             - name: "Checkout"
               uses: actions/checkout@v2
@@ -58,23 +58,36 @@ jobs:
                   GO111MODULES: "on"
               run: go mod download
 
-            - name: "Build"
+            - name: "Build for Windows"
               env:
                   GOOS: "windows"
                   GOARCH: "amd64"
                   CGO_ENABLED: "1"
               run: go build -o kafka-ui.exe ./cmd/main.go
 
-            - name: "Upload Build Artifacts"
+            - name: "Build for Linux"
+              env:
+                  GOOS: "linux"
+                  GOARCH: "amd64"
+                  CGO_ENABLED: "1"
+              run: go build -o kafka-ui ./cmd/main.go
+
+            - name: "Upload Windows Build Artifacts"
               uses: actions/upload-artifact@v2
               with:
                   name: windows-build
-                  path: kafka-ui.exe
+                  path: ./kafka-ui.exe
+
+            - name: "Upload Linux Build Artifacts"
+              uses: actions/upload-artifact@v2
+              with:
+                  name: linux-build
+                  path: ./kafka-ui
 
     release:
         name: "Create Release"
         runs-on: "ubuntu-latest"
-        needs: [frontend, backend-windows]
+        needs: [frontend, backend]
         if: (github.ref == 'refs/heads/master' && github.event_name == 'push')
         steps:
             - name: Create Tag
@@ -127,3 +140,19 @@ jobs:
                   upload_url: ${{ steps.create_release.outputs.upload_url }}
                   asset_path: ./kafka-ui.exe
                   asset_name: kafka-ui.exe
+
+            # Upload Linux build
+            - name: "Download Linux Build Artifacts"
+              uses: actions/download-artifact@v2
+              with:
+                  name: linux-build
+                  path: ./kafka-ui
+
+            - name: "Upload Windows Build"
+              uses: actions/upload-release-asset@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: ./kafka-ui
+                  asset_name: kafka-ui
