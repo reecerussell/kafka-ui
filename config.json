@@ -1,0 +1,17 @@
+{
+	"topics": [
+		{
+			"name": "my-topic",
+			"displayName": "My Topic"
+		}
+	],
+	"kafka": {
+		"bootstrapServers": "<kafka host>",
+		"groupId": "kafka-ui",
+		"autoOffsetReset": "earliest",
+		"securityProtocol": "SASL_SSL",
+		"saslMechanism": "PLAIN",
+		"saslUsername": "$ConnectionString",
+		"saslPassword": "<kafka connection string>"
+	}
+}

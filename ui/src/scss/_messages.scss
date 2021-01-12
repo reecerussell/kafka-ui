@@ -1,0 +1,47 @@
+.kui-message-container {
+	min-height: 100%;
+
+	> div:last-of-type {
+		padding-top: 15px;
+	}
+}
+
+@media only screen and (min-width: 768px) {
+	.kui-message-container > div:last-of-type {
+		padding-top: 0;
+	}
+}
+
+.kui-messages {
+	// 100vh - header - subheader - margin - padding
+	min-height: calc(100vh - 56px - 61px - 15px - 30px);
+	height: 100%;
+	background-color: #fff;
+
+	h4 {
+		font-size: 18px;
+		margin-bottom: 0;
+		cursor: pointer;
+
+		&:hover {
+			text-decoration: underline;
+		}
+
+		span {
+			font-size: 10px;
+			color: #999;
+			margin-left: 5px;
+		}
+	}
+}
+
+.kui-message {
+	background-color: #fff;
+	height: 100%;
+	border: 0;
+	border-radius: 0;
+
+	.value-header {
+		font-size: 18px;
+	}
+}

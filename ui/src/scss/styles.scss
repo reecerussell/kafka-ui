@@ -1,0 +1,56 @@
+@import "~bootstrap/scss/bootstrap.scss";
+
+@import "messages";
+@import "json";
+
+html,
+body {
+	overflow-x: hidden; /* Prevent scroll on narrow devices */
+}
+
+body {
+	padding-top: 56px;
+}
+
+main {
+	background-color: #eee;
+	margin: 15px 0;
+	padding: 15px;
+}
+
+@media only screen and (min-width: 768px) {
+	main {
+		min-height: calc(100vh - 56px - 61px - 15px);
+	}
+}
+
+#topic-nav {
+	position: relative;
+	z-index: 2;
+	height: 2.75rem;
+	overflow-y: hidden;
+
+	.nav {
+		display: flex;
+		flex-wrap: nowrap;
+		padding-bottom: 1rem;
+		margin-top: -1px;
+		overflow-x: auto;
+		color: rgba(255, 255, 255, 0.75);
+		text-align: center;
+		white-space: nowrap;
+		-webkit-overflow-scrolling: touch;
+
+		.nav-link {
+			padding-top: 0.75rem;
+			padding-bottom: 0.75rem;
+			font-size: 0.875rem;
+			color: #6c757d;
+
+			&.active {
+				font-weight: 500;
+				color: #343a40;
+			}
+		}
+	}
+}

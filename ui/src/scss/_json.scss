@@ -1,0 +1,49 @@
+.kui-json {
+	background-color: #f7f7f7;
+
+	ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		li {
+			padding-right: 10px;
+
+			&:first-of-type .line-number {
+				padding-top: 10px;
+			}
+
+			&:last-of-type .line-number {
+				padding-bottom: 10px;
+			}
+
+			.line-number {
+				padding-left: 10px;
+				background-color: #dfdfdf;
+				border-right: 2px solid $dark;
+				width: 40px;
+				display: inline-block;
+			}
+
+			.prop-name {
+				color: rgb(1, 145, 1);
+			}
+
+			.boolean {
+				color: rgb(44, 44, 255);
+			}
+
+			.number {
+				color: rgb(255, 170, 11);
+			}
+
+			.string {
+				color: rgb(216, 112, 112);
+			}
+
+			.null {
+				color: #666;
+			}
+		}
+	}
+}
