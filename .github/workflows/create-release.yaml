@@ -53,6 +53,10 @@ jobs:
             - name: "Download Modules"
               env:
                   GO111MODULES: "on"
+              run: go mod download
+
+            - name: "Build"
+              env:
                   GOOS: "windows"
                   GOARCH: "amd64"
               run: go build -o kafka-ui.exe ./cmd/main.go
