@@ -9,4 +9,4 @@ SET PACKAGES=bash,bash-completion,openssh,rxvt,python,git,wget,curl,vim,gcc-core
 
 REM -- Running cygwin setup
 echo Installing
-setup-x86.exe --disable-buggy-antivirus -q -s %SITE% -l "%LOCALDIR%" -R "%ROOTDIR%" -P "%PACKAGES%"
+setup-x86_64.exe --disable-buggy-antivirus -q -s %SITE% -l "%LOCALDIR%" -R "%ROOTDIR%" -P "%PACKAGES%"
