@@ -51,7 +51,7 @@ jobs:
                   go-version: ^1.15
 
             - name: "Install Windows Dependencies"
-              run: apt-get install gcc-multilib gcc-mingw-w64
+              run: sudo apt-get install gcc-multilib gcc-mingw-w64
 
             - name: "Download Modules"
               env:
