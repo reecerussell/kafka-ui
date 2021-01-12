@@ -63,6 +63,8 @@ jobs:
                   GOOS: "windows"
                   GOARCH: "amd64"
                   CGO_ENABLED: "1"
+                  CXX_FOR_TARGET: "i686-w64-mingw32-g++"
+                  CC_FOR_TARGET: "i686-w64-mingw32-gcc"
               run: go build -o kafka-ui.exe ./cmd/main.go
 
             - name: "Build for Linux"
