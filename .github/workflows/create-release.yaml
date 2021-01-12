@@ -1,4 +1,4 @@
-name: "Build Frontend"
+name: "Build"
 
 on:
     push:
@@ -8,7 +8,7 @@ on:
 jobs:
     frontend:
         name: "Build Frontend"
-        runs-on: "windows-latest"
+        runs-on: "ubuntu-latest"
         steps:
             - name: "Checkout"
               uses: actions/checkout@v2
@@ -55,7 +55,7 @@ jobs:
                   GO111MODULES: "on"
                   GOOS: "windows"
                   GOARCH: "amd64"
-              run: go build -out kafka-ui.exe ./cmd/main.go
+              run: go build -o kafka-ui.exe ./cmd/main.go
 
             - name: "Upload Build Artifacts"
               uses: actions/upload-artifact@v2
