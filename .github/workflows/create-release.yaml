@@ -1,0 +1,121 @@
+name: "Build Frontend"
+
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    frontend:
+        name: "Build Frontend"
+        runs-on: "windows-latest"
+        steps:
+            - name: "Checkout"
+              uses: actions/checkout@v2
+
+            - name: "Setup Node"
+              uses: actions/setup-node@v1
+              with:
+                  node-version: "15"
+
+            - name: "Install Modules"
+              working-directory: ./ui
+              run: |
+                  npm install
+                  npm rebuild node-sass
+
+            - name: "Build"
+              working-directory: ./ui
+              run: npm run build
+
+            - name: "Zip Build Assets"
+              working-directory: ./ui
+              run: zip build.zip ./build
+
+            - name: "Upload Build Artifacts"
+              uses: actions/upload-artifact@v2
+              with:
+                  name: ui-assets
+                  path: ./ui/build.zip
+
+    backend-windows:
+        name: "Build Windows Backend"
+        runs-on: "windows-latest"
+        steps:
+            - name: "Checkout"
+              uses: actions/checkout@v2
+
+            - name: "Set up Go 1.15"
+              uses: actions/setup-go@v2
+              with:
+                  go-version: ^1.15
+
+            - name: "Download Modules"
+              env:
+                  GO111MODULES: "on"
+                  GOOS: "windows"
+                  GOARCH: "amd64"
+              run: go build -out kafka-ui.exe ./cmd/main.go
+
+            - name: "Upload Build Artifacts"
+              uses: actions/upload-artifact@v2
+              with:
+                  name: windows-build
+                  path: kafka-ui.exe
+
+    release:
+        name: "Create Release"
+        runs-on: "ubuntu-latest"
+        needs: [frontend, backend-windows]
+        if: (github.ref == 'refs/heads/master' && github.event_name == 'push')
+        steps:
+            - name: Create Tag
+              id: create_tag
+              uses: anothrNick/github-tag-action@1.34.0
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  WITH_V: true
+
+            - name: Create Release
+              id: create_release
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: ${{ steps.create_tag.outputs.new_tag }}
+                  release_name: Release ${{ steps.create_tag.outputs.new_tag }}
+                  draft: false
+                  prerelease: false
+
+            # Upload UI assets
+            - name: "Download UI Artifacts"
+              uses: actions/download-artifact@v2
+              with:
+                  name: ui-assets
+                  path: ./ui-assets.zip
+
+            - name: "Upload UI Assets"
+              uses: actions/upload-release-asset@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: ./ui-assets.zip
+                  asset_name: ui-assets.zip
+                  asset_content_type: application/zip
+
+            # Upload Windows build
+            - name: "Download Windows Build Artifacts"
+              uses: actions/download-artifact@v2
+              with:
+                  name: windows-build
+                  path: ./kafka-ui.exe
+
+            - name: "Upload Windows Build"
+              uses: actions/upload-release-asset@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: ./kafka-ui.exe
+                  asset_name: kafka-ui.exe
