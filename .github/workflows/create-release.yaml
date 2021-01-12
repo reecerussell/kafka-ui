@@ -50,9 +50,6 @@ jobs:
               with:
                   go-version: ^1.15
 
-            - name: "Install cygwin"
-              run: ./scripts/setup-cygwin.bat
-
             - name: "Download Modules"
               env:
                   GO111MODULES: "on"
