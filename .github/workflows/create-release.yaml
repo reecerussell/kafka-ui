@@ -47,7 +47,7 @@ jobs:
               uses: actions/checkout@v2
 
             - name: "Install Windows Dependencies"
-              run: apk add gcc-multilib gcc-mingw-w64 librdkafka-dev pkgconf
+              run: apk add mingw-w64-binutils mingw-w64-winpthreads mingw-w64-headers mingw-w64-crt mingw-w64-gcc make librdkafka-dev pkgconf
 
             - name: "Download Modules"
               env:
@@ -59,8 +59,9 @@ jobs:
                   GOOS: "windows"
                   GOARCH: "amd64"
                   CGO_ENABLED: "1"
-                  CXX: i686-w64-mingw32-g++
-                  CC: i686-w64-mingw32-gcc
+                  CXX_FOR_TARGET: x86_64-w64-mingw32-g++
+                  CC_FOR_TARGET: x86_64-w64-mingw32-gcc
+                  CC: x86_64-w64-mingw32-gcc
               run: go build -tags dynamic -o kafka-ui.exe ./cmd/main.go
 
             - name: "Build for Linux"
