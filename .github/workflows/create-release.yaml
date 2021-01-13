@@ -41,10 +41,7 @@ jobs:
     backend:
         name: "Build Backend"
         runs-on: ubuntu-latest
-        container:
-            image: golang:1.15-alpine
-            volumes:
-                - ".:/tmp/build"
+        container: golang:1.15-alpine
         steps:
             - name: "Checkout"
               uses: actions/checkout@v2
@@ -70,7 +67,6 @@ jobs:
                   CXX_FOR_TARGET: x86_64-w64-mingw32-g++
                   CC_FOR_TARGET: x86_64-w64-mingw32-gcc
                   CC: x86_64-w64-mingw32-gcc
-              working-directory: /tmp/build
               run: go build -o kafka-ui.exe ./cmd/main.go
 
             - name: "Build for Linux"
