@@ -13,6 +13,9 @@ const topicReducer = (state = initialState.topics, action) => {
 				...state,
 				loading: false,
 				topics: action.topics,
+				selectedTopic:
+					state.selectedTopic ||
+					(action.topics.length > 0 ? action.topics[0].name : null),
 			};
 		case types.GET_TOPICS_ERROR:
 			return {
@@ -24,8 +27,8 @@ const topicReducer = (state = initialState.topics, action) => {
 		case types.SET_SELECTED_TOPIC:
 			return {
 				...state,
-				selectedTopic: action.topic
-			}
+				selectedTopic: action.topic,
+			};
 		default:
 			return state;
 	}
@@ -34,6 +37,6 @@ const topicReducer = (state = initialState.topics, action) => {
 export const getTopics = (state) => state.topics.topics;
 export const getTopicsLoading = (state) => state.topics.loading;
 export const getTopicsError = (state) => state.topics.error;
-export const getSelectedTopic = state => state.topics.selectedTopic
+export const getSelectedTopic = (state) => state.topics.selectedTopic;
 
 export default topicReducer;

@@ -1,27 +1,51 @@
 import React from "react";
-import Messages from "./components/messages";
+import {
+	HashRouter as Router,
+	Route,
+	Redirect,
+	Switch,
+} from "react-router-dom";
 import NavBar from "./components/navbar";
-import "./scss/styles.scss"
+import "./scss/styles.scss";
 
-import {getSelectedTopic} from "./redux/reducers/topicReducer" 
-import { connect } from "react-redux";
+import routes from "./routes";
 
-const App = ({selectedTopic}) => {
+const App = () => {
 	return (
 		<>
-			<NavBar />
+			<Router>
+				<NavBar />
 
-			<main className="container">
-			{selectedTopic && <Messages topic={selectedTopic} />}
-			</main>
+				{routes.map(
+					(route, key) =>
+						route.subnav && (
+							<Route
+								key={key}
+								path={route.path}
+								exact={route.exact}
+								render={(props) => <route.subnav {...props} />}
+							/>
+						)
+				)}
+
+				<main className="container">
+					<Switch>
+						{routes.map((route, key) => (
+							<Route
+								key={key}
+								path={route.path}
+								exact={route.exact}
+								render={(props) => (
+									<route.component {...props} />
+								)}
+							/>
+						))}
+						<Redirect to="/messages" />
+					</Switch>
+				</main>
+			</Router>
 		</>
 	);
-}
+};
 
-const mapStateToProps = (state) => ({
-	selectedTopic: getSelectedTopic(state)
-})
-
-const mapDispatchToProps = (state) => ({})
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

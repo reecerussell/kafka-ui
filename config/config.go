@@ -14,7 +14,7 @@ type Config struct {
 	filename string
 	mu       sync.Mutex
 	Topics   []*model.Topic `json:"topics"`
-	Kafka    *Kafka         `json:"kafka,omitempty"`
+	Kafka    *model.Kafka   `json:"kafka,omitempty"`
 }
 
 func GetConfig(filename string) (*Config, error) {
@@ -43,7 +43,7 @@ func (c *Config) Save() error {
 		return fmt.Errorf("could not open config: %v", err)
 	}
 
-	bytes, _ := json.Marshal(c)
+	bytes, _ := json.MarshalIndent(c, "", "\t")
 	file.Truncate(0)
 	file.Write(bytes)
 
